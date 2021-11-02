@@ -1,14 +1,11 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<unistd.h>
-#include<stdbool.h>
-#include<time.h>
 #include<linux/input.h>
 #include<string.h>
 #include<fcntl.h>
 #include<sys/ioctl.h>
 #include<ctype.h>
-
 #define KEY_RELEASE 0
 #define KEY_IS_PRESSED 1
 #define KEY_KEEPING_PRESSED 2
