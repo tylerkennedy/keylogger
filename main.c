@@ -19,15 +19,12 @@ static void print_code(int code) {
 	struct parse_event *p;
 	for (p = key_events; p->name != NULL; p++) {
 		if (p->value == (unsigned) code) {
-			printf(" %s (0x%02x)\n", p->name, code);
+			//printf(" %s - ", p->name);
+			char keycopy[40];
+			strncpy(keycopy, &p->name[4], 40); // Chops off 'KEY_'
+			printf("%s\n", keycopy);
 			return;
 		}
-	}
-  // Only print 'printable' characters
-	if (isprint(code)) {
-		printf("'%c' (0x%02x)\n", code, code);
-	} else {
-		printf("0x%02x\n", code);
 	}
 }
 
@@ -65,7 +62,17 @@ int main() {
     // Loop over the input event per byte size
 		for(int i = 0; i < (int) (readbyte / sizeof(struct input_event)); i++) {
 			if (EV_KEY == evt[i].type) {
-        // Essentially skips the events fired before and after a key press
+        
+	// Never print capslock or shift
+
+	// Add a check to see if KEY_IS_PRESSED or KEY_KEEPING_PRESSED and key = SHIFT_KEY (probably need to check for left and right). 
+	// Set a boolean variable for shift key to true
+	// Set a boolean variable for caplocks key to true if it is pressed
+	// XOR the value of capslock and shift to determine upper or lowercase
+
+
+				
+	// Essentially skips the events fired before and after a key press
         // this way only the pressed key value is shown
 				if ((evt[i].value == KEY_IS_PRESSED) || (evt[i].value == KEY_KEEPING_PRESSED)) {
 					// printf("%d\n", evt[i].code);
