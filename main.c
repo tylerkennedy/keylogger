@@ -207,7 +207,8 @@ int main(int argc, char *argv[]) {
 
 	bool uppercase = false; // determine if input is upper or lowercase
 	bool shiftHeld = false; // determine if shiftkey is being held
- 	// Create a listener to the input stream
+
+	// Create a listener to the input stream
 	while (1) {
 
     		// Read byte stream from input event
@@ -238,18 +239,14 @@ int main(int argc, char *argv[]) {
 					if(!shiftHeld){
 						shiftHeld = true;
 						uppercase = !uppercase;
-						printf("You are holding shift: %s \n", uppercase ? "true" : "false");
 					}
 				} else {
 					shiftHeld = false;
 				}	
 
 				if ((evt[i].value == KEY_IS_PRESSED) || (evt[i].value == KEY_KEEPING_PRESSED)) {
-					//print_code(evt[i].code, uppercase);
-					
 					if(evt[i].code == KEY_CAPSLOCK) {
 						uppercase = !uppercase;
-						printf("You hit capslock: %s \n", uppercase ? "true" : "false");
 					} else {
 						print_code(evt[i].code, uppercase);
 					}
