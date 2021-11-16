@@ -75,6 +75,48 @@ static void print_code(int code, bool uppercase) {
 					 specialCase = false;
 			}	
 
+      if (uppercase && specialCase) {
+        switch(p->value) {
+          case 12:
+          case 74:
+            strcpy(keycopy, "_");
+            break;
+          case 13:
+          case 117:
+            strcpy(keycopy, "+");
+            break;
+          case 26:
+            strcpy(keycopy, "{");
+            break;
+          case 27:
+            strcpy(keycopy, "}");
+            break;
+          case 39:
+            strcpy(keycopy, ":");
+            break;
+          case 40:
+            strcpy(keycopy, "\"");
+            break;
+          case 41:
+            strcpy(keycopy, "~");
+            break;
+          case 43:
+            strcpy(keycopy, "|");
+            break;
+          case 51:
+            strcpy(keycopy, "<");
+            break;
+          case 52: 
+          case 83:
+            strcpy(keycopy, ">");
+            break;
+          case 53:
+          case 98:
+            strcpy(keycopy, "?");
+            break;
+        }
+      }
+
 			// Convert to lowercase if needed
 			if (!uppercase && !specialCase) {
 				for (int i = 0; keycopy[i]!='\0'; i++) {
