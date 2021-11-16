@@ -70,6 +70,18 @@ static void print_code(int code, bool uppercase) {
 				case 96:
 					 strcpy(keycopy, " ");
 					 break;
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+        case 9:
+        case 10:
+        case 11:
+            strncpy(keycopy, &p->name[4], 40); // Chops off 'KEY_'
+            break;
 				default:
 					 strncpy(keycopy, &p->name[4], 40); // Chops off 'KEY_'
 					 specialCase = false;
@@ -77,6 +89,36 @@ static void print_code(int code, bool uppercase) {
 
       if (uppercase && specialCase) {
         switch(p->value) {
+          case 2:
+            strcpy(keycopy, "!");
+            break;
+          case 3:
+            strcpy(keycopy, "@");
+            break;
+          case 4:
+            strcpy(keycopy, "#");
+            break;
+          case 5:
+            strcpy(keycopy, "$");
+            break;
+          case 6:
+            strcpy(keycopy, "%");
+            break;
+          case 7:
+            strcpy(keycopy, "^");
+            break;
+          case 8:
+            strcpy(keycopy, "&");
+            break;
+          case 9:
+            strcpy(keycopy, "*");
+            break;
+          case 10:
+            strcpy(keycopy, "(");
+            break;
+          case 11:
+            strcpy(keycopy, ")");
+            break;
           case 12:
           case 74:
             strcpy(keycopy, "_");
