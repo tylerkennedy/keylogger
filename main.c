@@ -228,16 +228,6 @@ int main(int argc, char *argv[]) {
     // Loop over the input event per byte size
 		for(int i = 0; i < (int) (readbyte / sizeof(struct input_event)); i++) {
 			if (EV_KEY == evt[i].type) {
-        
-				// Never print capslock or shift
-
-				// Add a check to see if KEY_IS_PRESSED or KEY_KEEPING_PRESSED and key = SHIFT_KEY (probably need to check for left and right). 
-				// Set a boolean variable for shift key to true
-				// Set a boolean variable for caplocks key to true if it is pressed
-				// XOR the value of capslock and shift to determine upper or lowercase
-		
-				
-				
 				// Handle shift key event, determine if shift key is being held
 				if ( (evt[i].code == KEY_RIGHTSHIFT || evt[i].code == KEY_LEFTSHIFT)) {
 					if(!shiftHeld){
