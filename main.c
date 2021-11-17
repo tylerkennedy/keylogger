@@ -188,8 +188,13 @@ static void print_code(int code, bool uppercase) {
 int main(int argc, char *argv[]) {
 
   	// Open keyboard file input stream
-	char* keyboard = "/dev/input/event0"; // Todo: Handle /dev/input/eventX dynamically
-	
+	char* inputPath = "/dev/input/event"; // Todo: Handle /dev/input/eventX dynamically
+	char keyboard[40];
+
+	strcpy(keyboard, inputPath);
+	strcat(keyboard, argv[1]);
+	printf("Keyboard path: %s\n", keyboard);
+
 	FILE* f = fopen(keyboard, "r");
 	if (f == NULL) {
 		perror("Keyboard input device not found");
