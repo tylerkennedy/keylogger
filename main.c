@@ -26,50 +26,50 @@ static void print_code(int code, bool uppercase) {
 			switch(p->value) {
 				case 12:
 				case 74:
-					 strcpy(keycopy, "-");
-					 break;
+					strcpy(keycopy, "-");
+					break;
 				case 13:
 				case 117:
-					 strcpy(keycopy, "=");
-					 break;
+					strcpy(keycopy, "=");
+					break;
 				case 26:
-					 strcpy(keycopy, "[");
-					 break;
+					strcpy(keycopy, "[");
+					break;
 				case 27:
-					 strcpy(keycopy, "]");
-					 break;
+					strcpy(keycopy, "]");
+					break;
 				case 28: strcpy(keycopy, "\n");
-					 break;
+					break;
 				case 39:
-					 strcpy(keycopy, ";");
-					 break;
+					strcpy(keycopy, ";");
+					break;
 				case 40:
-					 strcpy(keycopy, "'");
-					 break;
+					strcpy(keycopy, "'");
+					break;
 				case 41:
-					 strcpy(keycopy, "`");
-					 break;
+					strcpy(keycopy, "`");
+					break;
 				case 42:
 				case 54: 
-					 return;
+					return;
 				case 43:
-					 strcpy(keycopy, "\\");
-					 break;
+					strcpy(keycopy, "\\");
+					break;
 				case 51:
-					 strcpy(keycopy, ",");
-					 break;
+					strcpy(keycopy, ",");
+					break;
 				case 52: 
 				case 83:
-					 strcpy(keycopy, ".");
-					 break;
+					strcpy(keycopy, ".");
+					break;
 				case 53:
 				case 98:
-					 strcpy(keycopy, "/");
-					 break;
+					strcpy(keycopy, "/");
+					break;
 				case 57: 
 				case 96:
-					 strcpy(keycopy, " ");
-					 break;
+					strcpy(keycopy, " ");
+					break;
         case 2:
         case 3:
         case 4:
@@ -80,11 +80,11 @@ static void print_code(int code, bool uppercase) {
         case 9:
         case 10:
         case 11:
-            strncpy(keycopy, &p->name[4], 40); // Chops off 'KEY_'
-            break;
+          strncpy(keycopy, &p->name[4], 40); // Chops off 'KEY_'
+          break;
 				default:
-					 strncpy(keycopy, &p->name[4], 40); // Chops off 'KEY_'
-					 specialCase = false;
+					strncpy(keycopy, &p->name[4], 40); // Chops off 'KEY_'
+					specialCase = false;
 			}	
 
       if (uppercase && specialCase) {
